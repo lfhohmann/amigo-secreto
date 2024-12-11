@@ -4,20 +4,20 @@ from uuid import uuid4
 
 from flask import Flask, jsonify, redirect, render_template, request, session
 
-import api.db
+from api import db
 
 app = Flask(__name__)
 app.secret_key = os.getenv("secretkey", "default_secret_key")
 
 
 def db_read():
-    with open("db.json", "r") as file:
-        return json.load(file)
+    return db.Data.objects.first().data
 
 
 def db_write(data):
-    with open("db.json", "w") as file:
-        json.dump(data, file, indent=4)
+    obj = db.Data.objects.first()
+    obj.data = data
+    obj.save()
 
 
 @app.route("/")
