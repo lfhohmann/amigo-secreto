@@ -11,7 +11,8 @@ app.secret_key = os.getenv("secretkey", "default_secret_key")
 
 
 def db_read():
-    return db.Data.objects.first().data
+    data = db.Data.objects.first().data
+    return data
 
 
 def db_write(data):
@@ -29,19 +30,22 @@ def home():
 def code():
     name = request.form["name"]
 
-    # if session.get("name") == name:
-    #     return {"status": "Vc ja fez isso!"}
+    if session.get("name") == name:
+        return {"status": "Vc ja fez isso!"}
 
-    data = db_read()
+    obj = db.Data.objects.first()
+    data = obj.data
+
     if data[name]["id"]:
-        return render_template("error.html")
+        return {"status": "Vc ja fez isso!"}
 
-    id = str(uuid4())
-    data[name]["id"] = id
-    db_write(data)
+    id_ = str(uuid4())
+    data[name]["id"] = id_
+    obj.data = data
+    obj.save()
 
     session["name"] = name
-    session["id"] = id
+    session["id"] = id_
 
     return redirect("/choose")
 
@@ -52,7 +56,8 @@ def choose():
         return render_template("choose.html", name=session["name"], id=session["id"])
 
     if request.method == "POST":
-        data = db_read()
+        obj = db.Data.objects.first()
+        data = obj.data
 
         if data[session["name"]]["people"]:
             return {"status": "Vc ja fez isso!"}
@@ -61,7 +66,8 @@ def choose():
         people = [request.form[option] for option in options]
 
         data[session["name"]]["people"] = people
-        db_write(data)
+        obj.data = data
+        obj.save()
 
         return {"status": "DEU BOA!"}
 
