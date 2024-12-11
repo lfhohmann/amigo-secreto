@@ -72,9 +72,11 @@ def results():
     return jsonify(data)
 
 
-@app.route("/env")
+@app.route("/reset")
 def env():
-    return f'{os.getenv("dbhost", "default_secret_key")}'
+    session.clear()
+
+    return f"Reset"
 
 
 if __name__ == "__main__":
