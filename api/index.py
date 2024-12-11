@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from flask import Flask, jsonify, redirect, render_template, request, session
 
-# import api.db
+import api.db
 
 app = Flask(__name__)
 app.secret_key = os.getenv("secretkey", "default_secret_key")
@@ -74,7 +74,7 @@ def results():
 
 @app.route("/env")
 def env():
-    return f'{os.getenv("secretkey", "default_secret_key")}'
+    return f'{os.getenv("dbhost", "default_secret_key")}'
 
 
 if __name__ == "__main__":
