@@ -2,8 +2,9 @@ import json
 import os
 from uuid import uuid4
 
-import db
 from flask import Flask, jsonify, redirect, render_template, request, session
+
+import api.db
 
 app = Flask(__name__)
 app.secret_key = os.getenv("secretkey", "default_secret_key")
