@@ -1,10 +1,12 @@
 import json
+import os
 from uuid import uuid4
 
+import db
 from flask import Flask, jsonify, redirect, render_template, request, session
 
 app = Flask(__name__)
-app.secret_key = "1234567890"
+app.secret_key = os.getenv("secretkey", "default_secret_key")
 
 
 def db_read():
@@ -67,6 +69,11 @@ def choose():
 def results():
     data = db_read()
     return jsonify(data)
+
+
+@app.route("/env")
+def env():
+    return f'{os.getenv("secretkey", "default_secret_key")}'
 
 
 if __name__ == "__main__":
